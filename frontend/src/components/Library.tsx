@@ -10,7 +10,7 @@ export default function Library({ onAddToPlaylist }: Props) {
   const [search, setSearch] = useState("");
   const [scanning, setScanning] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const loadTracks = async (q?: string) => {
     try {
