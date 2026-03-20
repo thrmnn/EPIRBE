@@ -1,10 +1,13 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 type ConnectionState = "idle" | "connecting" | "live" | "error";
 
 export default function SourceSwitch() {
   const [connState, setConnState] = useState<ConnectionState>("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const connStateRef = useRef(connState);
+  useEffect(() => { connStateRef.current = connState; }, [connState]);
 
   const mediaStreamRef = useRef<MediaStream | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
@@ -81,7 +84,7 @@ export default function SourceSwitch() {
     };
 
     ws.onclose = () => {
-      if (connState === "live" || connState === "connecting") {
+      if (connStateRef.current === "live" || connStateRef.current === "connecting") {
         setConnState("idle");
       }
       cleanup();
@@ -165,6 +168,12 @@ export default function SourceSwitch() {
         <button
           onClick={isActive ? stopMic : startMic}
           disabled={connState === "connecting"}
+          aria-label={
+            connState === "live" ? "Stop microphone" :
+            connState === "connecting" ? "Connecting microphone" :
+            connState === "error" ? "Retry microphone connection" :
+            "Go live with microphone"
+          }
           className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
             isActive
               ? "bg-red-600 text-white hover:bg-red-700"

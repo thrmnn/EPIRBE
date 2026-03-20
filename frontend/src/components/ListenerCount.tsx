@@ -1,4 +1,4 @@
-// ListenerCount is integrated into NowPlaying.tsx
+// TODO: Consider removing — functionality integrated into NowPlaying.tsx
 // This component is kept as a standalone if needed elsewhere.
 
 interface Props {

@@ -8,7 +8,7 @@ export default function Player() {
 
   const streamUrl = "/stream";
 
-  const togglePlay = () => {
+  const togglePlay = async () => {
     const audio = audioRef.current;
     if (!audio) return;
 
@@ -20,8 +20,13 @@ export default function Player() {
       // Reload src to get fresh stream
       audio.src = streamUrl;
       audio.volume = volume;
-      audio.play().catch(() => {});
-      setPlaying(true);
+      try {
+        await audio.play();
+        setPlaying(true);
+      } catch (err) {
+        setPlaying(false);
+        console.warn("Playback failed:", err);
+      }
     }
   };
 
@@ -36,11 +41,12 @@ export default function Player() {
   };
 
   return (
-    <div className="flex items-center gap-4 bg-radio-surface border border-radio-border rounded-xl p-4">
+    <div role="region" aria-label="Audio player" className="flex items-center gap-4 bg-radio-surface border border-radio-border rounded-xl p-4">
       <audio ref={audioRef} />
 
       <button
         onClick={togglePlay}
+        aria-label={playing ? "Pause" : "Play"}
         className="w-12 h-12 rounded-full bg-radio-accent flex items-center justify-center hover:brightness-110 transition-all"
       >
         {playing ? (
@@ -57,6 +63,7 @@ export default function Player() {
 
       <button
         onClick={handleSkip}
+        aria-label="Skip to next track"
         className="w-9 h-9 rounded-lg bg-radio-border flex items-center justify-center hover:bg-radio-muted/30 transition-all"
         title="Skip track"
       >
@@ -71,7 +78,9 @@ export default function Player() {
           <polygon points="11,5 6,9 2,9 2,15 6,15 11,19" />
           <path d="M14,8.5 C15.3,9.8 16,11.3 16,12 C16,12.7 15.3,14.2 14,15.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
         </svg>
+        <label htmlFor="volume-slider" className="sr-only">Volume</label>
         <input
+          id="volume-slider"
           type="range"
           min="0"
           max="1"

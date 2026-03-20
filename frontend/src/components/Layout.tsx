@@ -8,8 +8,11 @@ interface Props {
 export default function Layout({ children, isLive = false }: Props) {
   return (
     <div className="min-h-screen bg-radio-bg text-radio-text">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:bg-radio-accent focus:text-white focus:px-4 focus:py-2 focus:rounded">
+        Skip to main content
+      </a>
       {/* Header */}
-      <header className="border-b border-radio-border bg-radio-surface/50 backdrop-blur-sm sticky top-0 z-50">
+      <header role="banner" className="border-b border-radio-border bg-radio-surface/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
           <div className="relative">
             <div className="absolute -inset-1 rounded-xl bg-radio-accent/30 blur-md" />
@@ -32,7 +35,7 @@ export default function Layout({ children, isLive = false }: Props) {
       </header>
 
       {/* Main content */}
-      <main className="max-w-7xl mx-auto p-4">{children}</main>
+      <main role="main" id="main-content" className="max-w-7xl mx-auto p-4">{children}</main>
     </div>
   );
 }

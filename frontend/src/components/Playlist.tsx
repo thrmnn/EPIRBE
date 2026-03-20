@@ -63,7 +63,9 @@ export default function Playlist({ selectedPlaylistId, onSelect }: Props) {
       <div className="px-4 py-2 border-b border-radio-border">
         <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider mb-2">Playlists</h2>
         <form onSubmit={handleCreate} className="flex gap-2">
+          <label htmlFor="playlist-name-input" className="sr-only">Playlist name</label>
           <input
+            id="playlist-name-input"
             type="text"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
@@ -78,11 +80,20 @@ export default function Playlist({ selectedPlaylistId, onSelect }: Props) {
 
       <div className="flex flex-1 overflow-hidden">
         {/* Playlist list */}
-        <div className="w-1/3 border-r border-radio-border overflow-y-auto">
+        <div role="listbox" aria-label="Playlists" className="w-1/3 border-r border-radio-border overflow-y-auto">
           {playlists.map((pl) => (
             <div
               key={pl.id}
+              role="option"
+              aria-selected={selectedPlaylistId === pl.id}
+              tabIndex={0}
               onClick={() => onSelect(pl.id)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onSelect(pl.id);
+                }
+              }}
               className={`px-3 py-2 cursor-pointer text-sm flex items-center justify-between hover:bg-radio-border/50 transition-colors ${
                 selectedPlaylistId === pl.id ? "bg-radio-border" : ""
               }`}
@@ -97,7 +108,8 @@ export default function Playlist({ selectedPlaylistId, onSelect }: Props) {
                 {!pl.is_active && (
                   <button
                     onClick={(e) => { e.stopPropagation(); handleActivate(pl.id); }}
-                    className="text-[10px] px-1.5 py-0.5 rounded bg-radio-accent/20 text-radio-accent hover:bg-radio-accent/30"
+                    aria-label="Activate playlist"
+                    className="text-xs px-2.5 py-1.5 min-h-[36px] rounded bg-radio-accent/20 text-radio-accent hover:bg-radio-accent/30"
                     title="Activate"
                   >
                     ON
@@ -105,7 +117,8 @@ export default function Playlist({ selectedPlaylistId, onSelect }: Props) {
                 )}
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDelete(pl.id); }}
-                  className="text-[10px] px-1.5 py-0.5 rounded bg-red-900/20 text-red-400 hover:bg-red-900/30"
+                  aria-label="Delete playlist"
+                  className="text-xs px-2.5 py-1.5 min-h-[36px] rounded bg-red-900/20 text-red-400 hover:bg-red-900/30"
                   title="Delete"
                 >
                   X
@@ -130,6 +143,7 @@ export default function Playlist({ selectedPlaylistId, onSelect }: Props) {
                     <span className="truncate flex-1">{t.title || t.filename}</span>
                     <button
                       onClick={() => handleRemoveTrack(t.id)}
+                      aria-label="Remove track from playlist"
                       className="text-red-400 hover:text-red-300 ml-2"
                     >
                       -

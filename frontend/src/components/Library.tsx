@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { api, Track } from "../api/client";
 
 interface Props {
@@ -10,6 +10,7 @@ export default function Library({ onAddToPlaylist }: Props) {
   const [search, setSearch] = useState("");
   const [scanning, setScanning] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const loadTracks = async (q?: string) => {
     try {
@@ -24,7 +25,8 @@ export default function Library({ onAddToPlaylist }: Props) {
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
-    loadTracks(e.target.value || undefined);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => loadTracks(e.target.value || undefined), 300);
   };
 
   const handleScan = async () => {
@@ -74,7 +76,9 @@ export default function Library({ onAddToPlaylist }: Props) {
       <div className="flex items-center gap-2 px-4 py-2 border-b border-radio-border">
         <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider">Library</h2>
         <div className="ml-auto flex items-center gap-2">
+          <label htmlFor="library-search" className="sr-only">Search tracks</label>
           <input
+            id="library-search"
             type="text"
             value={search}
             onChange={handleSearch}
@@ -114,6 +118,7 @@ export default function Library({ onAddToPlaylist }: Props) {
                       type="checkbox"
                       checked={tracks.length > 0 && selectedIds.size === tracks.length}
                       onChange={toggleSelectAll}
+                      aria-label="Select all tracks"
                       className="accent-radio-accent"
                     />
                   </th>
@@ -133,6 +138,7 @@ export default function Library({ onAddToPlaylist }: Props) {
                         type="checkbox"
                         checked={selectedIds.has(track.id)}
                         onChange={() => toggleSelected(track.id)}
+                        aria-label="Select track"
                         className="accent-radio-accent"
                       />
                     </td>
@@ -144,6 +150,7 @@ export default function Library({ onAddToPlaylist }: Props) {
                     <td className="px-4 py-1.5 text-center">
                       <button
                         onClick={() => onAddToPlaylist(track.id)}
+                        aria-label="Add to playlist"
                         className="text-radio-accent hover:brightness-125"
                         title="Add to playlist"
                       >

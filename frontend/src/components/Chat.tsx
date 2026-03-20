@@ -1,6 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { useChat } from "../hooks/useChat";
 
+function timeAgo(iso: string): string {
+  const seconds = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (seconds < 60) return "just now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
 export default function Chat() {
   const { messages, sendMessage, connected } = useChat();
   const [input, setInput] = useState("");
@@ -53,22 +64,26 @@ export default function Chat() {
         <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider">Chat</h2>
         <span className="flex items-center gap-1">
           {editingUsername ? (
-            <input
-              ref={usernameInputRef}
-              type="text"
-              value={usernameInput}
-              onChange={(e) => setUsernameInput(e.target.value)}
-              onBlur={commitUsername}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") commitUsername();
-                if (e.key === "Escape") {
-                  setUsernameInput(username);
-                  setEditingUsername(false);
-                }
-              }}
-              className="bg-radio-bg border border-radio-border rounded px-1.5 py-0.5 text-xs outline-none focus:border-radio-accent w-24"
-              maxLength={20}
-            />
+            <>
+              <label htmlFor="username-input" className="sr-only">Username</label>
+              <input
+                id="username-input"
+                ref={usernameInputRef}
+                type="text"
+                value={usernameInput}
+                onChange={(e) => setUsernameInput(e.target.value)}
+                onBlur={commitUsername}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") commitUsername();
+                  if (e.key === "Escape") {
+                    setUsernameInput(username);
+                    setEditingUsername(false);
+                  }
+                }}
+                className="bg-radio-bg border border-radio-border rounded px-1.5 py-0.5 text-xs outline-none focus:border-radio-accent w-24"
+                maxLength={20}
+              />
+            </>
           ) : (
             <>
               <span className="text-xs text-radio-muted">{username}</span>
@@ -77,7 +92,8 @@ export default function Chat() {
                   setUsernameInput(username);
                   setEditingUsername(true);
                 }}
-                className="text-radio-muted hover:text-radio-accent transition-colors"
+                aria-label="Edit username"
+                className="p-2 -m-2 text-radio-muted hover:text-radio-accent transition-colors"
                 title="Edit username"
               >
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -89,18 +105,21 @@ export default function Chat() {
         </span>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-3 space-y-2">
+      <ul role="log" aria-live="polite" aria-label="Chat messages" className="flex-1 overflow-y-auto p-3 space-y-2">
         {messages.map((msg, i) => (
-          <div key={i} className="text-sm">
+          <li key={i} className="text-sm">
             <span className="font-semibold text-radio-accent">{msg.username}</span>{" "}
+            <span className="text-radio-muted text-xs">{timeAgo(msg.timestamp)}</span>{" "}
             <span className="text-radio-text">{msg.message}</span>
-          </div>
+          </li>
         ))}
         <div ref={bottomRef} />
-      </div>
+      </ul>
 
       <form onSubmit={handleSend} className="flex border-t border-radio-border">
+        <label htmlFor="chat-input" className="sr-only">Chat message</label>
         <input
+          id="chat-input"
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
