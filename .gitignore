@@ -28,3 +28,4 @@ media/
 
 # Generated playlists
 backend/playlists/*.m3u
+.claude/

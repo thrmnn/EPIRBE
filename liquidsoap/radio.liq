@@ -23,7 +23,7 @@ silence = blank(id="silence")
 live = input.harbor(
   id="live",
   port=8005,
-  password=environment.get("ICECAST_SOURCE_PASSWORD", "hackme"),
+  password=environment.get(default="hackme", "ICECAST_SOURCE_PASSWORD"),
   "/live"
 )
 
@@ -43,18 +43,17 @@ radio = fallback(
 radio = mksafe(radio)
 
 # Log metadata changes so we can debug now-playing issues
-radio.on_metadata(fun (m) ->
-  title  = m["title"]
-  artist = m["artist"]
-  log("Now playing: artist=#{artist} title=#{title}")
-end)
+def on_meta(m)
+  log("Now playing: #{m['artist']} - #{m['title']}")
+end
+radio.on_metadata(on_meta)
 
 # Output to Icecast
 output.icecast(
   %mp3(bitrate=192),
   host="icecast",
   port=8000,
-  password=environment.get("ICECAST_SOURCE_PASSWORD", "hackme"),
+  password=environment.get(default="hackme", "ICECAST_SOURCE_PASSWORD"),
   mount="/stream",
   name="EPIRBE Radio",
   description="Web Radio",
