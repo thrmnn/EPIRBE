@@ -29,3 +29,5 @@ media/
 # Generated playlists
 backend/playlists/*.m3u
 .claude/
+frontend/package-lock.json
+frontend/tsconfig.tsbuildinfo
