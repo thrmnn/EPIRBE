@@ -1,59 +1,156 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import Layout from "./components/Layout";
-import Player from "./components/Player";
-import NowPlaying from "./components/NowPlaying";
+import PlayerBar from "./components/PlayerBar";
+import ListenerView from "./components/ListenerView";
+import AdminDashboard from "./components/AdminDashboard";
+import FirstVisitSplash from "./components/FirstVisitSplash";
 import Chat from "./components/Chat";
 import Library from "./components/Library";
-import Playlist from "./components/Playlist";
-import SourceSwitch from "./components/SourceSwitch";
-import { api } from "./api/client";
+import { useNowPlaying } from "./hooks/useNowPlaying";
+import { useAuth } from "./hooks/useAuth";
 
 export default function App() {
-  const [selectedPlaylistId, setSelectedPlaylistId] = useState<number | null>(null);
+  const [showAdmin, setShowAdmin] = useState(false);
+  const [firstVisit, setFirstVisit] = useState(
+    () => localStorage.getItem("epirbe_visited") === null
+  );
+  const [showLoginInput, setShowLoginInput] = useState(false);
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState(false);
 
-  const handleAddToPlaylist = useCallback(
-    async (trackId: number) => {
-      if (!selectedPlaylistId) {
-        alert("Select a playlist first");
-        return;
+  const { title, artist, listeners } = useNowPlaying();
+  const { isAdmin, login, logout } = useAuth();
+  const loginInputRef = useRef<HTMLInputElement>(null);
+
+  const handleStartListening = useCallback(() => {
+    localStorage.setItem("epirbe_visited", "1");
+    setFirstVisit(false);
+  }, []);
+
+  const handleDjButtonClick = useCallback(() => {
+    if (isAdmin) {
+      setShowAdmin((prev) => !prev);
+      setShowLoginInput(false);
+    } else {
+      setShowLoginInput((prev) => !prev);
+      setLoginError(false);
+      setLoginPassword("");
+      // Focus the input on next render
+      setTimeout(() => loginInputRef.current?.focus(), 0);
+    }
+  }, [isAdmin]);
+
+  const handleLoginSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!loginPassword.trim()) return;
+      const success = await login(loginPassword);
+      if (success) {
+        setShowAdmin(true);
+        setShowLoginInput(false);
+        setLoginPassword("");
+        setLoginError(false);
+      } else {
+        setLoginError(true);
       }
-      await api.addTrackToPlaylist(selectedPlaylistId, trackId);
-      // Trigger playlist track reload by toggling selection
-      setSelectedPlaylistId(null);
-      setTimeout(() => setSelectedPlaylistId(selectedPlaylistId), 0);
     },
-    [selectedPlaylistId]
+    [loginPassword, login]
+  );
+
+  const handleLogout = useCallback(() => {
+    logout();
+    setShowAdmin(false);
+  }, [logout]);
+
+  // Build the current track string for the splash screen
+  const currentTrack = title
+    ? artist
+      ? `${title} — ${artist}`
+      : title
+    : undefined;
+
+  // DJ button + optional login form for the header
+  const headerExtra = (
+    <div className="flex items-center gap-2">
+      {showLoginInput && !isAdmin && (
+        <form onSubmit={handleLoginSubmit} className="flex items-center gap-2">
+          <label htmlFor="dj-password" className="sr-only">
+            DJ password
+          </label>
+          <input
+            ref={loginInputRef}
+            id="dj-password"
+            type="password"
+            value={loginPassword}
+            onChange={(e) => {
+              setLoginPassword(e.target.value);
+              setLoginError(false);
+            }}
+            placeholder="Password"
+            className={`w-32 px-2 py-1 text-sm bg-radio-bg border rounded-lg outline-none focus:border-radio-accent ${
+              loginError ? "border-red-500" : "border-radio-border"
+            }`}
+          />
+          <button
+            type="submit"
+            className="px-3 py-1 text-sm font-semibold bg-radio-accent text-white rounded-lg hover:brightness-110 transition-all"
+          >
+            Login
+          </button>
+        </form>
+      )}
+      <button
+        onClick={handleDjButtonClick}
+        aria-label={
+          isAdmin
+            ? showAdmin
+              ? "Back to listener view"
+              : "Open DJ dashboard"
+            : "DJ login"
+        }
+        className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all ${
+          isAdmin
+            ? showAdmin
+              ? "bg-radio-accent/20 text-radio-accent hover:bg-radio-accent/30"
+              : "bg-radio-border text-radio-text hover:bg-radio-muted/30"
+            : "bg-radio-border text-radio-muted hover:bg-radio-muted/30"
+        }`}
+      >
+        <svg
+          className="w-4 h-4"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M12,1C7,1 3,5 3,10V17A3,3 0 0,0 6,20H9V12H5V10A7,7 0 0,1 12,3A7,7 0 0,1 19,10V12H15V20H18A3,3 0 0,0 21,17V10C21,5 17,1 12,1Z" />
+        </svg>
+        {isAdmin ? (showAdmin ? "Listener" : "Dashboard") : "DJ"}
+      </button>
+    </div>
   );
 
   return (
-    <Layout>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Left column: Now Playing + Player + Source */}
-        <div className="space-y-4">
-          <NowPlaying />
-          <Player />
-          <div className="lg:hidden">
+    <>
+      {firstVisit && (
+        <FirstVisitSplash
+          onStart={handleStartListening}
+          listenerCount={listeners}
+          currentTrack={currentTrack}
+        />
+      )}
+
+      <Layout isLive={false} headerExtra={headerExtra}>
+        {showAdmin && isAdmin ? (
+          <AdminDashboard onLogout={handleLogout} />
+        ) : (
+          <ListenerView>
             <Chat />
-          </div>
-          <SourceSwitch />
-        </div>
+            <Library />
+          </ListenerView>
+        )}
+      </Layout>
 
-        {/* Center column: Playlist + Library */}
-        <div className="lg:col-span-1 space-y-4">
-          <Playlist
-            selectedPlaylistId={selectedPlaylistId}
-            onSelect={setSelectedPlaylistId}
-          />
-          <div className="max-h-[50vh] lg:max-h-none">
-            <Library onAddToPlaylist={handleAddToPlaylist} />
-          </div>
-        </div>
-
-        {/* Right column: Chat (desktop only, mobile is inline above) */}
-        <div className="hidden lg:block">
-          <Chat />
-        </div>
-      </div>
-    </Layout>
+      <PlayerBar />
+    </>
   );
 }

@@ -3,9 +3,10 @@ import { ReactNode } from "react";
 interface Props {
   children: ReactNode;
   isLive?: boolean;
+  headerExtra?: ReactNode;
 }
 
-export default function Layout({ children, isLive = false }: Props) {
+export default function Layout({ children, isLive = false, headerExtra }: Props) {
   return (
     <div className="min-h-screen bg-radio-bg text-radio-text">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[60] focus:bg-radio-accent focus:text-white focus:px-4 focus:py-2 focus:rounded">
@@ -30,6 +31,11 @@ export default function Layout({ children, isLive = false }: Props) {
               <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
               Live
             </span>
+          )}
+          {headerExtra && (
+            <div className="ml-auto flex items-center gap-2">
+              {headerExtra}
+            </div>
           )}
         </div>
       </header>
