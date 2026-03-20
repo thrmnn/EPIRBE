@@ -14,6 +14,9 @@ class Settings(BaseSettings):
     playlist_dir: str = "/data/playlists"
     database_path: str = "/data/epirbe.db"
 
+    admin_password: str = "admin"
+    admin_token: str = "epirbe-admin-token"
+
     model_config = {"env_prefix": "", "case_sensitive": False}
 
 
