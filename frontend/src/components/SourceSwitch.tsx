@@ -138,29 +138,29 @@ export default function SourceSwitch() {
   const isActive = connState === "live" || connState === "connecting";
 
   return (
-    <div className="bg-radio-surface border border-radio-border rounded-xl p-4">
+    <div className="bg-radio-surface-1 border border-radio-border-subtle rounded-xl p-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider">
+          <h2 className="text-sm font-semibold text-radio-text-tertiary uppercase tracking-wider">
             Source
           </h2>
           <p className="text-sm mt-1">
             {connState === "live" && (
-              <span className="text-radio-accent font-semibold">
-                <span className="inline-block w-2 h-2 bg-red-500 rounded-full mr-1.5 animate-pulse" />
+              <span className="text-radio-live font-semibold">
+                <span className="inline-block w-2 h-2 bg-radio-live rounded-full mr-1.5 animate-pulse" />
                 LIVE MIC
               </span>
             )}
             {connState === "connecting" && (
-              <span className="text-yellow-400 font-semibold">Connecting...</span>
+              <span className="text-radio-warning font-semibold">Connecting...</span>
             )}
             {connState === "error" && (
-              <span className="text-red-400 font-semibold">
+              <span className="text-radio-error font-semibold">
                 {errorMsg || "Error"}
               </span>
             )}
             {connState === "idle" && (
-              <span className="text-radio-text">Playlist</span>
+              <span className="text-radio-text-primary">Playlist</span>
             )}
           </p>
         </div>
@@ -176,10 +176,10 @@ export default function SourceSwitch() {
           }
           className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
             isActive
-              ? "bg-red-600 text-white hover:bg-red-700"
+              ? "bg-radio-error text-white hover:brightness-110"
               : connState === "error"
-                ? "bg-yellow-600 text-white hover:bg-yellow-700"
-                : "bg-radio-border text-radio-text hover:bg-radio-muted/30"
+                ? "bg-radio-warning text-radio-surface-1 hover:brightness-110"
+                : "bg-radio-surface-2 text-radio-text-primary hover:bg-radio-surface-highlight"
           } disabled:opacity-50 disabled:cursor-not-allowed`}
         >
           {connState === "live" && "Stop Mic"}

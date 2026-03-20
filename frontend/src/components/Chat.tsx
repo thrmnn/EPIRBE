@@ -59,9 +59,9 @@ export default function Chat() {
   };
 
   return (
-    <div className="bg-radio-surface border border-radio-border rounded-xl flex flex-col h-80">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-radio-border">
-        <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider">Chat</h2>
+    <div className="bg-radio-surface-1 border border-radio-border-subtle rounded-xl flex flex-col h-80">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-radio-border-subtle">
+        <h2 className="text-sm font-semibold text-radio-text-tertiary uppercase tracking-wider">Chat</h2>
         <span className="flex items-center gap-1">
           {editingUsername ? (
             <>
@@ -80,20 +80,20 @@ export default function Chat() {
                     setEditingUsername(false);
                   }
                 }}
-                className="bg-radio-bg border border-radio-border rounded px-1.5 py-0.5 text-xs outline-none focus:border-radio-accent w-24"
+                className="bg-radio-surface-base border border-radio-border-subtle rounded px-1.5 py-0.5 text-xs outline-none focus:border-radio-primary w-24"
                 maxLength={20}
               />
             </>
           ) : (
             <>
-              <span className="text-xs text-radio-muted">{username}</span>
+              <span className="text-xs text-radio-text-secondary">{username}</span>
               <button
                 onClick={() => {
                   setUsernameInput(username);
                   setEditingUsername(true);
                 }}
                 aria-label="Edit username"
-                className="p-2 -m-2 text-radio-muted hover:text-radio-accent transition-colors"
+                className="p-2 -m-2 text-radio-text-tertiary hover:text-radio-primary transition-colors"
                 title="Edit username"
               >
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -108,15 +108,15 @@ export default function Chat() {
       <ul role="log" aria-live="polite" aria-label="Chat messages" className="flex-1 overflow-y-auto p-3 space-y-2">
         {messages.map((msg, i) => (
           <li key={i} className="text-sm">
-            <span className="font-semibold text-radio-accent">{msg.username}</span>{" "}
-            <span className="text-radio-muted text-xs">{timeAgo(msg.timestamp)}</span>{" "}
-            <span className="text-radio-text">{msg.message}</span>
+            <span className="font-semibold text-radio-primary">{msg.username}</span>{" "}
+            <span className="text-radio-text-tertiary text-xs">{timeAgo(msg.timestamp)}</span>{" "}
+            <span className="text-radio-text-primary">{msg.message}</span>
           </li>
         ))}
         <div ref={bottomRef} />
       </ul>
 
-      <form onSubmit={handleSend} className="flex border-t border-radio-border">
+      <form onSubmit={handleSend} className="flex border-t border-radio-border-subtle">
         <label htmlFor="chat-input" className="sr-only">Chat message</label>
         <input
           id="chat-input"
@@ -125,12 +125,12 @@ export default function Chat() {
           onChange={(e) => setInput(e.target.value)}
           placeholder={connected ? "Say something..." : "Connecting..."}
           disabled={!connected}
-          className="flex-1 bg-transparent px-4 py-2 text-sm outline-none placeholder:text-radio-muted"
+          className="flex-1 bg-transparent px-4 py-2 text-sm text-radio-text-primary outline-none placeholder:text-radio-text-tertiary focus:outline-none"
         />
         <button
           type="submit"
           disabled={!connected}
-          className="px-4 py-2 text-sm font-semibold text-radio-accent hover:bg-radio-border transition-all"
+          className="px-4 py-2 text-sm font-semibold text-radio-primary hover:bg-radio-surface-2 transition-all"
         >
           Send
         </button>

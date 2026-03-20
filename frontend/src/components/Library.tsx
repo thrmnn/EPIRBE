@@ -72,9 +72,9 @@ export default function Library({ onAddToPlaylist }: Props) {
   };
 
   return (
-    <div className="bg-radio-surface border border-radio-border rounded-xl flex flex-col h-96">
-      <div className="flex items-center gap-2 px-4 py-2 border-b border-radio-border">
-        <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider">Library</h2>
+    <div className="bg-radio-surface-1 border border-radio-border-subtle rounded-xl flex flex-col h-96">
+      <div className="flex items-center gap-2 px-4 py-2 border-b border-radio-border-subtle">
+        <h2 className="text-sm font-semibold text-radio-text-tertiary uppercase tracking-wider">Library</h2>
         <div className="ml-auto flex items-center gap-2">
           <label htmlFor="library-search" className="sr-only">Search tracks</label>
           <input
@@ -83,12 +83,12 @@ export default function Library({ onAddToPlaylist }: Props) {
             value={search}
             onChange={handleSearch}
             placeholder="Search..."
-            className="bg-radio-bg border border-radio-border rounded-lg px-3 py-1 text-sm outline-none focus:border-radio-accent w-40"
+            className="bg-radio-surface-base border border-radio-border-subtle rounded-lg px-3 py-1 text-sm outline-none focus:border-radio-primary w-40"
           />
           {onAddToPlaylist && selectedIds.size > 0 && (
             <button
               onClick={handleAddSelected}
-              className="text-xs px-3 py-1 rounded-lg bg-radio-accent/20 text-radio-accent hover:bg-radio-accent/30 transition-all"
+              className="text-xs px-3 py-1 rounded-lg bg-radio-primary-muted text-radio-primary hover:bg-radio-primary/20 transition-all"
             >
               Add {selectedIds.size} Selected
             </button>
@@ -96,7 +96,7 @@ export default function Library({ onAddToPlaylist }: Props) {
           <button
             onClick={handleScan}
             disabled={scanning}
-            className="text-xs px-3 py-1 rounded-lg bg-radio-border hover:bg-radio-muted/30 transition-all disabled:opacity-50"
+            className="text-xs px-3 py-1 rounded-lg bg-radio-surface-2 text-radio-text-secondary hover:bg-radio-surface-highlight transition-all disabled:opacity-50"
           >
             {scanning ? "Scanning..." : "Scan"}
           </button>
@@ -105,12 +105,12 @@ export default function Library({ onAddToPlaylist }: Props) {
 
       <div className="flex-1 overflow-y-auto">
         {tracks.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-radio-muted text-sm">
+          <div className="flex items-center justify-center h-full text-radio-text-secondary text-sm">
             No tracks found. Click Scan to import music.
           </div>
         ) : (
           <table className="w-full text-sm">
-            <thead className="text-radio-muted text-xs uppercase sticky top-0 bg-radio-surface">
+            <thead className="text-radio-text-tertiary text-xs uppercase sticky top-0 bg-radio-surface-1">
               <tr>
                 {onAddToPlaylist && (
                   <th className="px-4 py-2 w-8">
@@ -119,7 +119,7 @@ export default function Library({ onAddToPlaylist }: Props) {
                       checked={tracks.length > 0 && selectedIds.size === tracks.length}
                       onChange={toggleSelectAll}
                       aria-label="Select all tracks"
-                      className="accent-radio-accent"
+                      className="accent-radio-primary"
                     />
                   </th>
                 )}
@@ -131,7 +131,7 @@ export default function Library({ onAddToPlaylist }: Props) {
             </thead>
             <tbody>
               {tracks.map((track) => (
-                <tr key={track.id} className="hover:bg-radio-border/50 transition-colors">
+                <tr key={track.id} className="hover:bg-radio-surface-2/50 transition-colors">
                   {onAddToPlaylist && (
                     <td className="px-4 py-1.5">
                       <input
@@ -139,19 +139,19 @@ export default function Library({ onAddToPlaylist }: Props) {
                         checked={selectedIds.has(track.id)}
                         onChange={() => toggleSelected(track.id)}
                         aria-label="Select track"
-                        className="accent-radio-accent"
+                        className="accent-radio-primary"
                       />
                     </td>
                   )}
                   <td className="px-4 py-1.5 truncate max-w-[200px]">{track.title || track.filename}</td>
-                  <td className="px-4 py-1.5 text-radio-muted truncate max-w-[150px]">{track.artist || "Unknown"}</td>
-                  <td className="px-4 py-1.5 text-right text-radio-muted">{formatDuration(track.duration)}</td>
+                  <td className="px-4 py-1.5 text-radio-text-secondary truncate max-w-[150px]">{track.artist || "Unknown"}</td>
+                  <td className="px-4 py-1.5 text-right text-radio-text-secondary">{formatDuration(track.duration)}</td>
                   {onAddToPlaylist && (
                     <td className="px-4 py-1.5 text-center">
                       <button
                         onClick={() => onAddToPlaylist(track.id)}
                         aria-label="Add to playlist"
-                        className="text-radio-accent hover:brightness-125"
+                        className="text-radio-primary hover:brightness-125"
                         title="Add to playlist"
                       >
                         +
