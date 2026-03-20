@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import init_db
-from app.routers import library, playlist, stream, status, chat
+from app.routers import library, playlist, stream, status, chat, mic
 
 
 @asynccontextmanager
@@ -28,6 +28,7 @@ app.include_router(playlist.router)
 app.include_router(stream.router)
 app.include_router(status.router)
 app.include_router(chat.router)
+app.include_router(mic.router)
 
 
 @app.get("/api/health")
