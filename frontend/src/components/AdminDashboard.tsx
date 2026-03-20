@@ -1,14 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { api, type Track, type Playlist } from "../api/client";
-import AudioMeter from "./AudioMeter";
+import SourceSwitch from "./SourceSwitch";
+import Chat from "./Chat";
+import { useToast } from "./ui/ToastContext";
 
 interface AdminDashboardProps {
   onLogout: () => void;
 }
 
 export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
-  // Mic / Broadcast state
-  const [isOnAir, setIsOnAir] = useState(false);
+  const { toast } = useToast();
 
   // Playlist state
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -79,8 +80,10 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       await api.createPlaylist(name);
       setNewPlaylistName("");
       await fetchPlaylists();
+      toast("Playlist created", "success");
     } catch (err) {
       console.error("Failed to create playlist:", err);
+      toast(`Error: ${err instanceof Error ? err.message : "Failed to create playlist"}`, "error");
     } finally {
       setPlaylistLoading(false);
     }
@@ -93,8 +96,10 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
         setSelectedPlaylistId(null);
       }
       await fetchPlaylists();
+      toast("Playlist deleted", "success");
     } catch (err) {
       console.error("Failed to delete playlist:", err);
+      toast(`Error: ${err instanceof Error ? err.message : "Failed to delete playlist"}`, "error");
     }
   };
 
@@ -102,8 +107,10 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
     try {
       await api.activatePlaylist(id);
       await fetchPlaylists();
+      toast("Playlist activated", "success");
     } catch (err) {
       console.error("Failed to activate playlist:", err);
+      toast(`Error: ${err instanceof Error ? err.message : "Failed to activate playlist"}`, "error");
     }
   };
 
@@ -115,6 +122,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       await fetchPlaylists(); // refresh track count
     } catch (err) {
       console.error("Failed to remove track:", err);
+      toast(`Error: ${err instanceof Error ? err.message : "Failed to remove track"}`, "error");
     }
   };
 
@@ -126,6 +134,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       await fetchPlaylists(); // refresh track count
     } catch (err) {
       console.error("Failed to add track:", err);
+      toast(`Error: ${err instanceof Error ? err.message : "Failed to add track"}`, "error");
     }
   };
 
@@ -138,9 +147,11 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
       const result = await api.scanLibrary();
       setScanResult(`Found ${result.tracks_found} tracks`);
       await fetchTracks(searchQuery || undefined);
+      toast(`Library scan complete: ${result.tracks_found} tracks found`, "success");
     } catch (err) {
       console.error("Failed to scan library:", err);
       setScanResult("Scan failed");
+      toast(`Error: ${err instanceof Error ? err.message : "Library scan failed"}`, "error");
     } finally {
       setScanning(false);
     }
@@ -152,12 +163,6 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
 
   const handleSearchKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleSearch();
-  };
-
-  // ---- Broadcast toggle (UI only for Phase 1) ----
-
-  const toggleBroadcast = () => {
-    setIsOnAir((prev) => !prev);
   };
 
   // ---- Helpers ----
@@ -172,14 +177,18 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
   return (
     <div className="min-h-screen bg-radio-bg text-radio-text">
       {/* Header */}
-      <header className="bg-radio-surface border-b border-radio-border px-4 py-3 flex items-center justify-between">
-        <h1 className="text-xl font-bold">DJ Dashboard</h1>
+      <header className="bg-gradient-to-r from-radio-accent/20 via-radio-surface to-radio-surface border-b border-radio-accent/30 px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 bg-radio-accent rounded-full animate-pulse" />
+          <h1 className="text-xl font-bold">DJ Dashboard</h1>
+        </div>
         <div className="flex items-center gap-3">
           <button
+            onClick={onLogout}
             aria-label="Back to listener view"
             className="text-sm text-radio-muted hover:text-radio-text transition-colors"
           >
-            Back to Listener View
+            Listener View
           </button>
           <button
             onClick={onLogout}
@@ -196,40 +205,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
           {/* ===== LEFT COLUMN ===== */}
           <div className="flex flex-col gap-6">
             {/* Mic Control Panel */}
-            <section className="bg-radio-surface border border-radio-border rounded-xl p-4">
-              <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider mb-3">
-                Broadcast
-              </h2>
-
-              <div className="flex items-center gap-2 mb-3">
-                {isOnAir ? (
-                  <span className="flex items-center gap-1.5 text-red-400 font-semibold text-sm">
-                    <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                    ON AIR
-                  </span>
-                ) : (
-                  <span className="text-radio-muted text-sm font-semibold">
-                    OFF AIR
-                  </span>
-                )}
-              </div>
-
-              <div className="mb-3">
-                <AudioMeter stream={null} active={isOnAir} />
-              </div>
-
-              <button
-                onClick={toggleBroadcast}
-                aria-label={isOnAir ? "Stop broadcast" : "Go live"}
-                className={`w-full h-12 rounded-lg text-sm font-semibold transition-all ${
-                  isOnAir
-                    ? "bg-red-600 text-white hover:bg-red-700"
-                    : "bg-radio-accent text-white hover:brightness-110"
-                }`}
-              >
-                {isOnAir ? "Stop" : "Go Live"}
-              </button>
-            </section>
+            <SourceSwitch />
 
             {/* Playlist Manager Panel */}
             <section className="bg-radio-surface border border-radio-border rounded-xl p-4">
@@ -519,15 +495,8 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
               </div>
             </section>
 
-            {/* Chat Panel (placeholder) */}
-            <section className="bg-radio-surface border border-radio-border rounded-xl p-4">
-              <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider mb-3">
-                Chat
-              </h2>
-              <p className="text-sm text-radio-muted">
-                Chat moderation panel — will be connected in Phase 2
-              </p>
-            </section>
+            {/* Chat Panel */}
+            <Chat />
           </div>
         </div>
       </div>

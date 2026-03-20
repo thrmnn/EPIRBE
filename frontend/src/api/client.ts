@@ -1,8 +1,17 @@
 const API_BASE = "/api";
 
+function authHeaders(): HeadersInit {
+  const token = localStorage.getItem("epirbe_admin_token");
+  const headers: HeadersInit = { "Content-Type": "application/json" };
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders(),
     ...options,
   });
   if (!res.ok) {
@@ -12,6 +21,15 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 }
 
 export const api = {
+  // Auth
+  login: (password: string) => request<{ token: string; role: string }>("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ password }),
+  }),
+  verify: (token: string) => request<{ status: string; role: string }>("/auth/verify", {
+    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+  }),
+
   // Library
   scanLibrary: () => request<{ status: string; tracks_found: number }>("/library/scan", { method: "POST" }),
   getTracks: (search?: string) => {
