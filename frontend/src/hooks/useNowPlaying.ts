@@ -3,6 +3,7 @@ import { useWebSocket } from "./useWebSocket";
 
 export interface StreamStatus {
   title: string | null;
+  artist: string | null;
   listeners: number;
   server_name: string;
 }
@@ -10,6 +11,7 @@ export interface StreamStatus {
 export function useNowPlaying() {
   const [status, setStatus] = useState<StreamStatus>({
     title: null,
+    artist: null,
     listeners: 0,
     server_name: "EPIRBE Radio",
   });

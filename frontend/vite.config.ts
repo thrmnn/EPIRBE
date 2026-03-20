@@ -15,6 +15,10 @@ export default defineConfig({
         target: "ws://backend:8080",
         ws: true,
       },
+      "/stream": {
+        target: "http://icecast:8000",
+        changeOrigin: true,
+      },
     },
   },
 });
