@@ -6,7 +6,7 @@ export default function Player() {
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(0.8);
 
-  const streamUrl = `http://${window.location.hostname}:8000/stream`;
+  const streamUrl = "/stream";
 
   const togglePlay = () => {
     const audio = audioRef.current;

@@ -11,7 +11,7 @@ function Equalizer() {
 }
 
 export default function NowPlaying() {
-  const { title, listeners, connected } = useNowPlaying();
+  const { title, artist, listeners, connected } = useNowPlaying();
 
   return (
     <div className="bg-radio-surface border border-radio-border rounded-xl p-4">
@@ -23,9 +23,14 @@ export default function NowPlaying() {
       </div>
       <div className="flex items-center gap-2">
         {title && <Equalizer />}
-        <p className="text-lg font-medium truncate">
-          {title || "Waiting for stream..."}
-        </p>
+        <div className="min-w-0">
+          <p className="text-lg font-medium truncate">
+            {title || "Waiting for stream..."}
+          </p>
+          {artist && (
+            <p className="text-sm text-radio-muted truncate">{artist}</p>
+          )}
+        </div>
       </div>
       <div className="flex items-center gap-1 mt-2 text-sm text-radio-muted">
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
