@@ -175,25 +175,25 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
   };
 
   return (
-    <div className="min-h-screen bg-radio-bg text-radio-text">
+    <div className="min-h-screen bg-radio-surface-base text-radio-text-primary">
       {/* Header */}
-      <header className="bg-gradient-to-r from-radio-accent/20 via-radio-surface to-radio-surface border-b border-radio-accent/30 px-4 py-3 flex items-center justify-between">
+      <header className="bg-gradient-to-r from-radio-primary/10 via-radio-surface-1 to-radio-surface-1 border-b border-radio-primary/30 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 bg-radio-accent rounded-full animate-pulse" />
-          <h1 className="text-xl font-bold">DJ Dashboard</h1>
+          <span className="w-2 h-2 bg-radio-primary rounded-full animate-pulse" />
+          <h1 className="text-xl font-display font-bold text-radio-text-primary">DJ Dashboard</h1>
         </div>
         <div className="flex items-center gap-3">
           <button
             onClick={onLogout}
             aria-label="Back to listener view"
-            className="text-sm text-radio-muted hover:text-radio-text transition-colors"
+            className="text-sm text-radio-secondary hover:text-radio-secondary-hover transition-colors"
           >
             Listener View
           </button>
           <button
             onClick={onLogout}
             aria-label="Logout"
-            className="px-3 py-1.5 text-sm font-semibold bg-radio-border text-radio-text rounded-lg hover:bg-radio-muted/30 transition-all"
+            className="px-3 py-1.5 text-sm font-semibold bg-radio-surface-2 text-radio-text-secondary rounded-lg hover:text-radio-text-primary transition-all"
           >
             Logout
           </button>
@@ -208,8 +208,8 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
             <SourceSwitch />
 
             {/* Playlist Manager Panel */}
-            <section className="bg-radio-surface border border-radio-border rounded-xl p-4">
-              <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider mb-3">
+            <section className="bg-radio-surface-1 border border-radio-border-subtle rounded-[16px] p-4">
+              <h2 className="text-sm font-display font-semibold text-radio-text-primary uppercase tracking-wider mb-3">
                 Playlists
               </h2>
 
@@ -224,13 +224,13 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   }}
                   placeholder="New playlist name"
                   aria-label="New playlist name"
-                  className="flex-1 px-3 py-2 bg-radio-bg border border-radio-border rounded-lg text-sm text-radio-text placeholder:text-radio-muted focus:outline-none focus:border-radio-accent"
+                  className="flex-1 px-3 py-2 bg-radio-surface-base border border-radio-border-subtle rounded-lg text-sm text-radio-text-primary placeholder:text-radio-text-tertiary focus:outline-none focus:border-radio-primary"
                 />
                 <button
                   onClick={handleCreatePlaylist}
                   disabled={playlistLoading || !newPlaylistName.trim()}
                   aria-label="Create playlist"
-                  className="px-4 min-h-[44px] bg-radio-accent text-white text-sm font-semibold rounded-lg hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 min-h-[44px] bg-radio-primary text-radio-surface-1 text-sm font-semibold rounded-lg hover:bg-radio-primary-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Create
                 </button>
@@ -243,8 +243,8 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     key={pl.id}
                     className={`flex items-center justify-between px-3 py-2 rounded-lg border transition-all cursor-pointer ${
                       selectedPlaylistId === pl.id
-                        ? "border-radio-accent bg-radio-accent/10"
-                        : "border-radio-border hover:border-radio-muted"
+                        ? "border-radio-primary bg-radio-surface-2"
+                        : "border-radio-border-subtle hover:border-radio-border-default"
                     }`}
                     onClick={() =>
                       setSelectedPlaylistId(
@@ -264,8 +264,8 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     }}
                   >
                     <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">{pl.name}</p>
-                      <p className="text-xs text-radio-muted">
+                      <p className="text-sm font-medium text-radio-text-primary truncate">{pl.name}</p>
+                      <p className="text-xs text-radio-text-secondary">
                         {pl.track_count} track{pl.track_count !== 1 ? "s" : ""}
                       </p>
                     </div>
@@ -282,8 +282,8 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                         }
                         className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-xs font-semibold transition-all ${
                           pl.is_active
-                            ? "bg-radio-muted/20 text-radio-muted cursor-default"
-                            : "bg-radio-accent text-white hover:brightness-110"
+                            ? "bg-radio-primary-muted text-radio-text-tertiary cursor-default"
+                            : "bg-radio-primary-muted text-radio-primary hover:bg-radio-primary-muted/60"
                         }`}
                         disabled={pl.is_active}
                       >
@@ -305,7 +305,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                           handleDeletePlaylist(pl.id);
                         }}
                         aria-label={`Delete ${pl.name}`}
-                        className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-xs font-semibold bg-red-600/20 text-red-400 hover:bg-red-600/30 transition-all"
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-xs font-semibold bg-radio-error-muted text-radio-error hover:bg-radio-error-muted/60 transition-all"
                       >
                         <svg
                           className="w-4 h-4"
@@ -319,7 +319,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   </div>
                 ))}
                 {playlists.length === 0 && (
-                  <p className="text-sm text-radio-muted py-2">
+                  <p className="text-sm text-radio-text-tertiary py-2">
                     No playlists yet. Create one above.
                   </p>
                 )}
@@ -327,8 +327,8 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
 
               {/* Selected playlist tracks */}
               {selectedPlaylistId !== null && (
-                <div className="border-t border-radio-border pt-3">
-                  <h3 className="text-xs font-semibold text-radio-muted uppercase tracking-wider mb-2">
+                <div className="border-t border-radio-border-subtle pt-3">
+                  <h3 className="text-xs font-semibold text-radio-text-secondary uppercase tracking-wider mb-2">
                     Tracks in{" "}
                     {playlists.find((p) => p.id === selectedPlaylistId)?.name}
                   </h3>
@@ -336,18 +336,18 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     {playlistTracks.map((track, index) => (
                       <div
                         key={track.id}
-                        className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-radio-bg/50"
+                        className="flex items-center justify-between px-2 py-1.5 rounded-lg hover:bg-radio-surface-base/50"
                       >
                         <div className="flex items-center gap-2 min-w-0">
-                          <span className="text-xs text-radio-muted w-5 text-right flex-shrink-0">
+                          <span className="text-xs text-radio-text-tertiary w-5 text-right flex-shrink-0">
                             {index + 1}
                           </span>
                           <div className="min-w-0">
-                            <p className="text-sm truncate">
+                            <p className="text-sm text-radio-text-primary truncate">
                               {track.title || track.filename}
                             </p>
                             {track.artist && (
-                              <p className="text-xs text-radio-muted truncate">
+                              <p className="text-xs text-radio-text-secondary truncate">
                                 {track.artist}
                               </p>
                             )}
@@ -356,7 +356,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                         <button
                           onClick={() => handleRemoveTrackFromPlaylist(track.id)}
                           aria-label={`Remove ${track.title || track.filename} from playlist`}
-                          className="min-w-[44px] min-h-[44px] flex items-center justify-center text-red-400 hover:text-red-300 transition-colors"
+                          className="min-w-[44px] min-h-[44px] flex items-center justify-center text-radio-error hover:text-radio-error/80 transition-colors"
                         >
                           <svg
                             className="w-4 h-4"
@@ -369,7 +369,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                       </div>
                     ))}
                     {playlistTracks.length === 0 && (
-                      <p className="text-xs text-radio-muted py-2">
+                      <p className="text-xs text-radio-text-tertiary py-2">
                         No tracks in this playlist.
                       </p>
                     )}
@@ -382,8 +382,8 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
           {/* ===== RIGHT COLUMN ===== */}
           <div className="flex flex-col gap-6">
             {/* Library Panel */}
-            <section className="bg-radio-surface border border-radio-border rounded-xl p-4">
-              <h2 className="text-sm font-semibold text-radio-muted uppercase tracking-wider mb-3">
+            <section className="bg-radio-surface-1 border border-radio-border-subtle rounded-[16px] p-4">
+              <h2 className="text-sm font-display font-semibold text-radio-text-primary uppercase tracking-wider mb-3">
                 Library
               </h2>
 
@@ -396,12 +396,12 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   onKeyDown={handleSearchKeyDown}
                   placeholder="Search tracks..."
                   aria-label="Search tracks"
-                  className="flex-1 px-3 py-2 bg-radio-bg border border-radio-border rounded-lg text-sm text-radio-text placeholder:text-radio-muted focus:outline-none focus:border-radio-accent"
+                  className="flex-1 px-3 py-2 bg-radio-surface-base border border-radio-border-subtle rounded-lg text-sm text-radio-text-primary placeholder:text-radio-text-tertiary focus:outline-none focus:border-radio-primary"
                 />
                 <button
                   onClick={handleSearch}
                   aria-label="Search"
-                  className="px-3 min-h-[44px] bg-radio-border text-radio-text text-sm font-semibold rounded-lg hover:bg-radio-muted/30 transition-all"
+                  className="px-3 min-h-[44px] bg-radio-surface-2 text-radio-text-primary text-sm font-semibold rounded-lg hover:bg-radio-surface-3 transition-all"
                 >
                   <svg
                     className="w-4 h-4"
@@ -418,21 +418,21 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   onClick={handleScan}
                   disabled={scanning}
                   aria-label="Scan library"
-                  className="px-4 min-h-[44px] bg-radio-border text-radio-text text-sm font-semibold rounded-lg hover:bg-radio-muted/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-4 min-h-[44px] bg-radio-surface-2 text-radio-text-primary text-sm font-semibold rounded-lg hover:bg-radio-surface-3 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {scanning ? "Scanning..." : "Scan"}
                 </button>
               </div>
 
               {scanResult && (
-                <p className="text-xs text-radio-muted mb-2">{scanResult}</p>
+                <p className="text-xs text-radio-text-secondary mb-2">{scanResult}</p>
               )}
 
               {/* Track table */}
               <div className="max-h-[400px] overflow-y-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="text-xs text-radio-muted uppercase border-b border-radio-border">
+                    <tr className="text-xs text-radio-text-secondary uppercase border-b border-radio-border-subtle">
                       <th className="text-left py-2 px-1">Title</th>
                       <th className="text-left py-2 px-1 hidden sm:table-cell">
                         Artist
@@ -445,15 +445,15 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     {tracks.map((track) => (
                       <tr
                         key={track.id}
-                        className="border-b border-radio-border/50 hover:bg-radio-bg/50"
+                        className="border-b border-radio-border-subtle/50 hover:bg-radio-surface-base/50"
                       >
-                        <td className="py-2 px-1 truncate max-w-[200px]">
+                        <td className="py-2 px-1 text-radio-text-primary truncate max-w-[200px]">
                           {track.title || track.filename}
                         </td>
-                        <td className="py-2 px-1 text-radio-muted truncate max-w-[150px] hidden sm:table-cell">
-                          {track.artist || "—"}
+                        <td className="py-2 px-1 text-radio-text-secondary truncate max-w-[150px] hidden sm:table-cell">
+                          {track.artist || "\u2014"}
                         </td>
-                        <td className="py-2 px-1 text-right text-radio-muted">
+                        <td className="py-2 px-1 text-right text-radio-text-secondary">
                           {formatDuration(track.duration)}
                         </td>
                         <td className="py-2 px-1 text-right">
@@ -466,7 +466,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                                 ? "Select a playlist first"
                                 : "Add to playlist"
                             }
-                            className="min-w-[44px] min-h-[44px] inline-flex items-center justify-center text-radio-accent hover:text-radio-accent/80 transition-colors disabled:text-radio-muted disabled:cursor-not-allowed"
+                            className="min-w-[44px] min-h-[44px] inline-flex items-center justify-center text-radio-primary hover:text-radio-primary-hover transition-colors disabled:text-radio-text-disabled disabled:cursor-not-allowed"
                           >
                             <svg
                               className="w-4 h-4"
@@ -483,12 +483,12 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 </table>
 
                 {libraryLoading && (
-                  <p className="text-sm text-radio-muted py-4 text-center">
+                  <p className="text-sm text-radio-text-secondary py-4 text-center">
                     Loading...
                   </p>
                 )}
                 {!libraryLoading && tracks.length === 0 && (
-                  <p className="text-sm text-radio-muted py-4 text-center">
+                  <p className="text-sm text-radio-text-secondary py-4 text-center">
                     No tracks found. Try scanning your library.
                   </p>
                 )}
