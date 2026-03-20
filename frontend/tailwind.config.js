@@ -10,7 +10,11 @@ export default {
           border: "#1e1e2e",
           accent: "#e63946",
           text: "#e0e0e0",
-          muted: "#6b7280",
+          muted: "#9ca3af",
+          success: "#22c55e",
+          warning: "#eab308",
+          error: "#ef4444",
+          info: "#3b82f6",
         },
       },
       keyframes: {
@@ -25,6 +29,10 @@ export default {
         "eq-3": {
           "0%, 100%": { height: "8px" },
           "50%": { height: "16px" },
+        },
+        slideUp: {
+          "0%": { transform: "translateY(1rem)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
         },
       },
       animation: {
