@@ -28,24 +28,29 @@ export default function App() {
   return (
     <Layout>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Left column: Player + Now Playing + Source */}
+        {/* Left column: Now Playing + Player + Source */}
         <div className="space-y-4">
           <NowPlaying />
           <Player />
+          <div className="lg:hidden">
+            <Chat />
+          </div>
           <SourceSwitch />
         </div>
 
-        {/* Center column: Library + Playlist */}
+        {/* Center column: Playlist + Library */}
         <div className="lg:col-span-1 space-y-4">
           <Playlist
             selectedPlaylistId={selectedPlaylistId}
             onSelect={setSelectedPlaylistId}
           />
-          <Library onAddToPlaylist={handleAddToPlaylist} />
+          <div className="max-h-[50vh] lg:max-h-none">
+            <Library onAddToPlaylist={handleAddToPlaylist} />
+          </div>
         </div>
 
-        {/* Right column: Chat */}
-        <div>
+        {/* Right column: Chat (desktop only, mobile is inline above) */}
+        <div className="hidden lg:block">
           <Chat />
         </div>
       </div>
