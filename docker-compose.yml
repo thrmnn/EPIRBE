@@ -53,6 +53,8 @@ services:
       - MUSIC_DIR=/media/music
       - PLAYLIST_DIR=/data/playlists
       - DATABASE_PATH=/data/epirbe.db
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-epirbe-admin-token}
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8080/api/health"]
       interval: 5s

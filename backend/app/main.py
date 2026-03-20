@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.database import init_db
-from app.routers import library, playlist, stream, status, chat, mic
+from app.routers import library, playlist, stream, status, chat, mic, auth
 
 
 @asynccontextmanager
@@ -29,6 +29,10 @@ app.include_router(stream.router)
 app.include_router(status.router)
 app.include_router(chat.router)
 app.include_router(mic.router)
+app.include_router(auth.router)
+
+# TODO: In a later phase, add require_admin dependency to destructive/admin endpoints
+# in the following routers: library, playlist, stream, mic
 
 
 @app.get("/api/health")
