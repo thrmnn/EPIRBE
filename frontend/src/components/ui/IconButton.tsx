@@ -8,10 +8,14 @@ interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 }
 
 const variantClasses: Record<NonNullable<IconButtonProps["variant"]>, string> = {
-  primary: "bg-radio-accent text-white hover:brightness-110",
-  secondary: "bg-radio-border text-radio-text hover:bg-radio-muted/30",
-  danger: "bg-red-600 text-white hover:bg-red-700",
-  ghost: "bg-transparent text-radio-text hover:bg-radio-border",
+  primary:
+    "bg-radio-primary text-radio-surface-1 hover:bg-radio-primary-hover active:bg-radio-primary-active active:scale-[0.97]",
+  secondary:
+    "bg-radio-surface-2 text-radio-text-secondary border border-radio-border-default hover:bg-radio-surface-highlight",
+  danger:
+    "bg-radio-error text-white hover:brightness-110",
+  ghost:
+    "bg-transparent text-radio-text-secondary hover:bg-radio-surface-2",
 };
 
 const sizeClasses: Record<NonNullable<IconButtonProps["size"]>, string> = {
@@ -27,8 +31,8 @@ const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
         ref={ref}
         aria-label={label}
         className={[
-          "inline-flex items-center justify-center rounded-md transition-all",
-          "focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-radio-surface",
+          "inline-flex items-center justify-center rounded-md transition-all duration-base",
+          "focus-visible:ring-2 focus-visible:ring-radio-primary focus-visible:ring-offset-2 focus-visible:ring-offset-radio-surface-base",
           "disabled:opacity-50 disabled:pointer-events-none",
           variantClasses[variant],
           sizeClasses[size],

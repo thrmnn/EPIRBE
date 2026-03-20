@@ -1,10 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* --- Surface Hierarchy --- */
+  --radio-surface-base: #08080d;
+  --radio-surface-1: #101018;
+  --radio-surface-2: #1a1a25;
+  --radio-surface-3: #242433;
+  --radio-surface-highlight: #2a2a3d;
+
+  /* --- Borders --- */
+  --radio-border-subtle: #1e1e2e;
+  --radio-border-default: #2d2d42;
+  --radio-border-strong: #3d3d57;
+  --radio-border-focus: #e8924b;
+
+  /* --- Primary (Broadcast Amber) --- */
+  --radio-primary: #e8924b;
+  --radio-primary-hover: #f0a565;
+  --radio-primary-active: #d07a35;
+  --radio-primary-muted: #e8924b26;
+  --radio-primary-subtle: #1f1610;
+
+  /* --- Secondary (Studio Cyan) --- */
+  --radio-secondary: #5ba4c9;
+  --radio-secondary-hover: #74b8dc;
+  --radio-secondary-active: #4890b5;
+  --radio-secondary-muted: #5ba4c926;
+  --radio-secondary-subtle: #0f161b;
+
+  /* --- Semantic: Success --- */
+  --radio-success: #34d399;
+  --radio-success-muted: #34d39918;
+  --radio-success-subtle: #0f1f19;
+
+  /* --- Semantic: Warning --- */
+  --radio-warning: #f0b429;
+  --radio-warning-muted: #f0b42918;
+  --radio-warning-subtle: #1f1a0f;
+
+  /* --- Semantic: Error --- */
+  --radio-error: #f06060;
+  --radio-error-muted: #f0606018;
+  --radio-error-subtle: #1f1010;
+
+  /* --- Semantic: Info --- */
+  --radio-info: #5ba4c9;
+  --radio-info-muted: #5ba4c918;
+  --radio-info-subtle: #0f161b;
+
+  /* --- Text Hierarchy --- */
+  --radio-text-primary: #ededf0;
+  --radio-text-secondary: #a8a8b8;
+  --radio-text-tertiary: #6e6e82;
+  --radio-text-disabled: #45455a;
+
+  /* --- Interactive Overlays --- */
+  --radio-hover-overlay: #ffffff0a;
+  --radio-active-overlay: #ffffff12;
+  --radio-focus-ring: #e8924b;
+  --radio-focus-ring-offset: #08080d;
+
+  /* --- Live / On-Air --- */
+  --radio-live: #ff3b3b;
+  --radio-live-glow: #ff3b3b60;
+  --radio-live-bg: #ff3b3b15;
+
+  /* --- Gradients --- */
+  --radio-gradient-surface: linear-gradient(180deg, #101018 0%, #08080d 100%);
+  --radio-gradient-warm: linear-gradient(135deg, #e8924b 0%, #d07a35 100%);
+  --radio-gradient-cool: linear-gradient(135deg, #5ba4c9 0%, #4890b5 100%);
+  --radio-gradient-live: linear-gradient(135deg, #ff3b3b 0%, #cc2f2f 100%);
+  --radio-gradient-glass: linear-gradient(180deg, #ffffff08 0%, #ffffff00 100%);
+  --radio-gradient-fade-down: linear-gradient(180deg, transparent 0%, #08080d 100%);
+
+  /* --- Typography --- */
+  --radio-font-display: 'Space Grotesk', system-ui, sans-serif;
+  --radio-font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --radio-font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* --- Shadows --- */
+  --radio-shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.4), 0 1px 3px 0 rgba(0,0,0,0.3);
+  --radio-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.5), 0 2px 4px -2px rgba(0,0,0,0.4);
+  --radio-shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.6), 0 4px 6px -4px rgba(0,0,0,0.5);
+  --radio-shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.7), 0 8px 10px -6px rgba(0,0,0,0.6);
+  --radio-shadow-inner: inset 0 2px 4px 0 rgba(0,0,0,0.4);
+  --radio-shadow-glow-sm: 0 0 8px 0 rgba(232,146,75,0.25);
+  --radio-shadow-glow-md: 0 0 16px 2px rgba(232,146,75,0.3);
+  --radio-shadow-glow-lg: 0 0 24px 4px rgba(232,146,75,0.35);
+  --radio-shadow-glow-live: 0 0 20px 4px rgba(255,59,59,0.4);
+  --radio-shadow-glow-cool: 0 0 16px 2px rgba(91,164,201,0.25);
+
+  /* --- Border Radius --- */
+  --radio-radius-sm: 6px;
+  --radio-radius-md: 10px;
+  --radio-radius-lg: 16px;
+  --radio-radius-xl: 24px;
+  --radio-radius-full: 9999px;
+  --radio-radius-round: 50%;
+
+  /* --- Transitions --- */
+  --radio-duration-instant: 50ms;
+  --radio-duration-fast: 100ms;
+  --radio-duration-base: 200ms;
+  --radio-duration-slow: 300ms;
+  --radio-duration-slower: 500ms;
+
+  --radio-easing-default: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+  --radio-easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --radio-easing-out: cubic-bezier(0, 0, 0.2, 1);
+  --radio-easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --radio-easing-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --radio-easing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --radio-duration-fast: 0ms;
+    --radio-duration-base: 0ms;
+    --radio-duration-slow: 0ms;
+    --radio-duration-slower: 0ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 body {
   margin: 0;
-  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  font-family: var(--radio-font-body);
+  background-color: var(--radio-surface-base);
+  color: var(--radio-text-primary);
 }
 
 ::-webkit-scrollbar {
@@ -12,22 +144,22 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #12121a;
+  background: var(--radio-surface-1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e1e2e;
+  background: var(--radio-border-default);
   border-radius: 3px;
 }
 
 /* Focus indicators for dark theme */
 *:focus-visible {
-  outline: 2px solid #ffffff;
+  outline: 2px solid var(--radio-focus-ring);
   outline-offset: 2px;
 }
 
 /* Firefox scrollbar support */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #1e1e2e #12121a;
+  scrollbar-color: var(--radio-border-default) var(--radio-surface-1);
 }

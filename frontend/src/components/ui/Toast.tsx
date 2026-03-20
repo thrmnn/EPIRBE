@@ -6,10 +6,16 @@ interface ToastProps {
   onClose: () => void;
 }
 
-const borderColors: Record<NonNullable<ToastProps["variant"]>, string> = {
-  success: "border-radio-success",
-  error: "border-radio-error",
-  info: "border-radio-info",
+const variantStyles: Record<NonNullable<ToastProps["variant"]>, string> = {
+  success: "border-radio-success bg-radio-success-subtle",
+  error: "border-radio-error bg-radio-error-subtle",
+  info: "border-radio-info bg-radio-info-subtle",
+};
+
+const iconColors: Record<NonNullable<ToastProps["variant"]>, string> = {
+  success: "text-radio-success",
+  error: "text-radio-error",
+  info: "text-radio-info",
 };
 
 const iconMap: Record<NonNullable<ToastProps["variant"]>, string> = {
@@ -20,27 +26,29 @@ const iconMap: Record<NonNullable<ToastProps["variant"]>, string> = {
 
 export default function Toast({ message, variant = "info", onClose }: ToastProps) {
   useEffect(() => {
-    const timer = setTimeout(onClose, 4000);
+    const duration = variant === "error" ? 6000 : 4000;
+    const timer = setTimeout(onClose, duration);
     return () => clearTimeout(timer);
-  }, [onClose]);
+  }, [onClose, variant]);
 
   return (
     <div
-      role="status"
-      aria-live="polite"
+      role={variant === "error" ? "alert" : "status"}
+      aria-live={variant === "error" ? "assertive" : "polite"}
       className={[
-        "flex items-center gap-3 rounded-lg border-l-4 bg-radio-surface px-4 py-3 text-radio-text shadow-lg",
-        "animate-[slideUp_0.3s_ease-out]",
-        borderColors[variant],
+        "flex items-center gap-3 rounded-lg border-l-4",
+        "bg-radio-surface-3 px-4 py-3 text-radio-text-primary shadow-lg",
+        "max-w-[400px] animate-slide-up",
+        variantStyles[variant],
       ].join(" ")}
     >
-      <span className="text-lg" aria-hidden="true">
+      <span className={`text-lg ${iconColors[variant]}`} aria-hidden="true">
         {iconMap[variant]}
       </span>
       <p className="flex-1 text-sm">{message}</p>
       <button
         onClick={onClose}
-        className="ml-2 text-radio-muted hover:text-radio-text transition-colors"
+        className="ml-2 text-radio-text-tertiary hover:text-radio-text-primary transition-colors"
         aria-label="Dismiss notification"
       >
         &times;

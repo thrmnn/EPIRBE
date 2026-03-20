@@ -54,8 +54,8 @@ export default function ConfirmDialog({
 
   const confirmButtonClass =
     variant === "danger"
-      ? "bg-red-600 text-white hover:bg-red-700"
-      : "bg-radio-accent text-white hover:brightness-110";
+      ? "bg-radio-error text-white hover:brightness-110"
+      : "bg-radio-primary text-radio-surface-1 hover:bg-radio-primary-hover active:bg-radio-primary-active";
 
   return (
     <dialog
@@ -63,13 +63,13 @@ export default function ConfirmDialog({
       role="alertdialog"
       aria-labelledby="confirm-dialog-title"
       aria-describedby="confirm-dialog-message"
-      className="m-auto rounded-lg border border-radio-border bg-radio-surface p-0 text-radio-text backdrop:bg-black/60 backdrop:backdrop-blur-sm"
+      className="m-auto rounded-lg border border-radio-border-default bg-radio-surface-2 p-0 text-radio-text-primary shadow-xl backdrop:bg-black/60 backdrop:backdrop-blur-sm animate-scale-in"
     >
       <div className="flex flex-col gap-4 p-6 max-w-md">
-        <h2 id="confirm-dialog-title" className="text-lg font-semibold">
+        <h2 id="confirm-dialog-title" className="text-lg font-semibold font-display">
           {title}
         </h2>
-        <p id="confirm-dialog-message" className="text-sm text-radio-muted">
+        <p id="confirm-dialog-message" className="text-sm text-radio-text-secondary">
           {message}
         </p>
         <div className="flex justify-end gap-3 pt-2">
@@ -77,9 +77,9 @@ export default function ConfirmDialog({
             ref={cancelButtonRef}
             onClick={onCancel}
             className={[
-              "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all",
-              "bg-radio-border text-radio-text hover:bg-radio-muted/30",
-              "focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-radio-surface",
+              "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all duration-base",
+              "bg-radio-surface-3 text-radio-text-secondary border border-radio-border-default hover:bg-radio-surface-highlight",
+              "focus-visible:ring-2 focus-visible:ring-radio-primary focus-visible:ring-offset-2 focus-visible:ring-offset-radio-surface-2",
               "min-h-[44px]",
             ].join(" ")}
           >
@@ -88,9 +88,9 @@ export default function ConfirmDialog({
           <button
             onClick={onConfirm}
             className={[
-              "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-all",
+              "inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-semibold transition-all duration-base",
               confirmButtonClass,
-              "focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-radio-surface",
+              "focus-visible:ring-2 focus-visible:ring-radio-primary focus-visible:ring-offset-2 focus-visible:ring-offset-radio-surface-2",
               "min-h-[44px]",
             ].join(" ")}
           >
