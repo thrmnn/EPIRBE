@@ -9,6 +9,7 @@ export default function Library({ onAddToPlaylist }: Props) {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [search, setSearch] = useState("");
   const [scanning, setScanning] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   const loadTracks = async (q?: string) => {
     try {
@@ -36,6 +37,31 @@ export default function Library({ onAddToPlaylist }: Props) {
     }
   };
 
+  const toggleSelected = (id: number) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.size === tracks.length) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(tracks.map((t) => t.id)));
+    }
+  };
+
+  const handleAddSelected = async () => {
+    if (!onAddToPlaylist) return;
+    for (const id of selectedIds) {
+      onAddToPlaylist(id);
+    }
+    setSelectedIds(new Set());
+  };
+
   const formatDuration = (seconds: number | null) => {
     if (!seconds) return "--:--";
     const m = Math.floor(seconds / 60);
@@ -55,6 +81,14 @@ export default function Library({ onAddToPlaylist }: Props) {
             placeholder="Search..."
             className="bg-radio-bg border border-radio-border rounded-lg px-3 py-1 text-sm outline-none focus:border-radio-accent w-40"
           />
+          {onAddToPlaylist && selectedIds.size > 0 && (
+            <button
+              onClick={handleAddSelected}
+              className="text-xs px-3 py-1 rounded-lg bg-radio-accent/20 text-radio-accent hover:bg-radio-accent/30 transition-all"
+            >
+              Add {selectedIds.size} Selected
+            </button>
+          )}
           <button
             onClick={handleScan}
             disabled={scanning}
@@ -74,6 +108,16 @@ export default function Library({ onAddToPlaylist }: Props) {
           <table className="w-full text-sm">
             <thead className="text-radio-muted text-xs uppercase sticky top-0 bg-radio-surface">
               <tr>
+                {onAddToPlaylist && (
+                  <th className="px-4 py-2 w-8">
+                    <input
+                      type="checkbox"
+                      checked={tracks.length > 0 && selectedIds.size === tracks.length}
+                      onChange={toggleSelectAll}
+                      className="accent-radio-accent"
+                    />
+                  </th>
+                )}
                 <th className="text-left px-4 py-2">Title</th>
                 <th className="text-left px-4 py-2">Artist</th>
                 <th className="text-right px-4 py-2">Duration</th>
@@ -83,6 +127,16 @@ export default function Library({ onAddToPlaylist }: Props) {
             <tbody>
               {tracks.map((track) => (
                 <tr key={track.id} className="hover:bg-radio-border/50 transition-colors">
+                  {onAddToPlaylist && (
+                    <td className="px-4 py-1.5">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(track.id)}
+                        onChange={() => toggleSelected(track.id)}
+                        className="accent-radio-accent"
+                      />
+                    </td>
+                  )}
                   <td className="px-4 py-1.5 truncate max-w-[200px]">{track.title || track.filename}</td>
                   <td className="px-4 py-1.5 text-radio-muted truncate max-w-[150px]">{track.artist || "Unknown"}</td>
                   <td className="px-4 py-1.5 text-right text-radio-muted">{formatDuration(track.duration)}</td>
