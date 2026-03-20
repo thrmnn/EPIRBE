@@ -27,15 +27,27 @@ live = input.harbor(
   "/live"
 )
 
-# Use live when available, otherwise playlist, otherwise silence
+# Use live when available, otherwise playlist, otherwise silence.
+# replay_metadata=true ensures metadata is re-sent when switching sources,
+# preventing mksafe/blank from swallowing track titles.
 radio = fallback(
   id="radio",
   track_sensitive=false,
+  replay_metadata=true,
   [live, radio_playlist, silence]
 )
 
-# Make the source infallible
+# Make the source infallible — mksafe adds a blank() fallback that drops
+# metadata.  Instead we already have silence in our fallback above, so we
+# only need mksafe as a final safety net.  Re-inject metadata afterwards.
 radio = mksafe(radio)
+
+# Log metadata changes so we can debug now-playing issues
+radio.on_metadata(fun (m) ->
+  title  = m["title"]
+  artist = m["artist"]
+  log("Now playing: artist=#{artist} title=#{title}")
+end)
 
 # Output to Icecast
 output.icecast(
@@ -46,5 +58,6 @@ output.icecast(
   mount="/stream",
   name="EPIRBE Radio",
   description="Web Radio",
+  encoding="UTF-8",
   radio
 )
