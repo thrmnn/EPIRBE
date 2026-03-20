@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { config } from "../config";
 
 export function useWebSocket<T>(url: string, onMessage?: (data: T) => void) {
   const wsRef = useRef<WebSocket | null>(null);
@@ -8,8 +9,7 @@ export function useWebSocket<T>(url: string, onMessage?: (data: T) => void) {
   const connect = useCallback(() => {
     if (wsRef.current?.readyState === WebSocket.OPEN) return;
 
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}${url}`;
+    const wsUrl = config.wsUrl(url);
     const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => setConnected(true);

@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { config } from "../config";
 
 type ConnectionState = "idle" | "connecting" | "live" | "error";
 
@@ -70,8 +71,7 @@ export default function SourceSwitch() {
     }
 
     // 2. Open WebSocket
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocol}//${window.location.host}/ws/mic`;
+    const wsUrl = config.wsUrl("/ws/mic");
     const ws = new WebSocket(wsUrl);
     ws.binaryType = "arraybuffer";
     wsRef.current = ws;

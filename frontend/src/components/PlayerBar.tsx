@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback } from "react";
 import { useNowPlaying } from "../hooks/useNowPlaying";
 import { api } from "../api/client";
+import { config } from "../config";
 
 interface PlayerBarProps {
   isLive?: boolean;
@@ -23,7 +24,7 @@ export default function PlayerBar({ isLive = false }: PlayerBarProps) {
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const { title, artist, listeners } = useNowPlaying();
 
-  const streamUrl = "/stream";
+  const streamUrl = config.streamUrl;
 
   const togglePlay = useCallback(async () => {
     const audio = audioRef.current;

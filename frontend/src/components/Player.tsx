@@ -1,12 +1,13 @@
 import { useRef, useState } from "react";
 import { api } from "../api/client";
+import { config } from "../config";
 
 export default function Player() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(0.8);
 
-  const streamUrl = "/stream";
+  const streamUrl = config.streamUrl;
 
   const togglePlay = async () => {
     const audio = audioRef.current;

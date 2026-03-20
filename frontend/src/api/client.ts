@@ -1,4 +1,6 @@
-const API_BASE = "/api";
+import { config } from "../config";
+
+const API_BASE = config.apiBase;
 
 function authHeaders(): HeadersInit {
   const token = localStorage.getItem("epirbe_admin_token");
