@@ -4,8 +4,8 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     icecast_host: str = "icecast"
     icecast_port: int = 8000
-    icecast_source_password: str = "hackme"
-    icecast_admin_password: str = "adminpass"
+    icecast_source_password: str
+    icecast_admin_password: str
 
     liquidsoap_telnet_host: str = "liquidsoap"
     liquidsoap_telnet_port: int = 1234

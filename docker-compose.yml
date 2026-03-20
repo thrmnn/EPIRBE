@@ -3,6 +3,9 @@ services:
     build: ./icecast
     ports:
       - "8000:8000"
+    environment:
+      - ICECAST_SOURCE_PASSWORD=${ICECAST_SOURCE_PASSWORD}
+      - ICECAST_ADMIN_PASSWORD=${ICECAST_ADMIN_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8000/ || exit 1"]
       interval: 5s
@@ -19,6 +22,14 @@ services:
     ports:
       - "1234:1234"
       - "8005:8005"
+    environment:
+      - ICECAST_SOURCE_PASSWORD=${ICECAST_SOURCE_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/1234'"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
     depends_on:
       icecast:
         condition: service_healthy
@@ -33,8 +44,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - ICECAST_SOURCE_PASSWORD=hackme
-      - ICECAST_ADMIN_PASSWORD=adminpass
+      - ICECAST_SOURCE_PASSWORD=${ICECAST_SOURCE_PASSWORD}
+      - ICECAST_ADMIN_PASSWORD=${ICECAST_ADMIN_PASSWORD}
       - ICECAST_HOST=icecast
       - ICECAST_PORT=8000
       - LIQUIDSOAP_TELNET_HOST=liquidsoap
@@ -42,16 +53,27 @@ services:
       - MUSIC_DIR=/media/music
       - PLAYLIST_DIR=/data/playlists
       - DATABASE_PATH=/data/epirbe.db
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/api/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
     depends_on:
       icecast:
         condition: service_healthy
+      liquidsoap:
+        condition: service_healthy
 
-  frontend:
-    build: ./frontend
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
 
 volumes:
   playlist-data:

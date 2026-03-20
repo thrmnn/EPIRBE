@@ -1,5 +1,8 @@
 import asyncio
 import logging
+import urllib.parse
+
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +35,7 @@ class MicRelay:
                     "-f", "mp3",
                     "-b:a", "192k",
                     "-content_type", "audio/mpeg",
-                    "icecast://source:hackme@liquidsoap:8005/live",
+                    f"icecast://source:{urllib.parse.quote(settings.icecast_source_password, safe='')}@liquidsoap:8005/live",
                     stdin=asyncio.subprocess.PIPE,
                     stdout=asyncio.subprocess.DEVNULL,
                     stderr=asyncio.subprocess.PIPE,

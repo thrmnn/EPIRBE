@@ -23,7 +23,7 @@ silence = blank(id="silence")
 live = input.harbor(
   id="live",
   port=8005,
-  password="hackme",
+  password=environment.get("ICECAST_SOURCE_PASSWORD", "hackme"),
   "/live"
 )
 
@@ -54,7 +54,7 @@ output.icecast(
   %mp3(bitrate=192),
   host="icecast",
   port=8000,
-  password="hackme",
+  password=environment.get("ICECAST_SOURCE_PASSWORD", "hackme"),
   mount="/stream",
   name="EPIRBE Radio",
   description="Web Radio",
