@@ -7,12 +7,12 @@ interface NowPlayingHeroProps {
 
 function Equalizer() {
   return (
-    <div className="flex items-end gap-[3px] h-6">
-      <span className="w-[4px] bg-radio-accent rounded-full animate-eq-1" />
-      <span className="w-[4px] bg-radio-accent rounded-full animate-eq-2" />
-      <span className="w-[4px] bg-radio-accent rounded-full animate-eq-3" />
-      <span className="w-[4px] bg-radio-accent rounded-full animate-eq-1" style={{ animationDelay: "0.2s" }} />
-      <span className="w-[4px] bg-radio-accent rounded-full animate-eq-2" style={{ animationDelay: "0.1s" }} />
+    <div className="flex items-end gap-[3px] h-6" aria-hidden="true">
+      <span className="w-[4px] bg-radio-primary rounded-full animate-eq-1" />
+      <span className="w-[4px] bg-radio-primary rounded-full animate-eq-2" />
+      <span className="w-[4px] bg-radio-primary rounded-full animate-eq-3" />
+      <span className="w-[4px] bg-radio-primary rounded-full animate-eq-1" style={{ animationDelay: "0.2s" }} />
+      <span className="w-[4px] bg-radio-primary rounded-full animate-eq-2" style={{ animationDelay: "0.1s" }} />
     </div>
   );
 }
@@ -26,13 +26,13 @@ export default function NowPlayingHero({ isLive = false, djName }: NowPlayingHer
       return (
         <div className="flex flex-col items-center gap-3">
           <Equalizer />
-          <h1 className="text-2xl font-bold text-radio-text text-center">{title}</h1>
+          <h2 className="font-display text-2xl font-bold text-radio-text-primary text-center">{title}</h2>
           {artist && (
-            <p className="text-lg text-radio-muted text-center">{artist}</p>
+            <p className="text-lg text-radio-text-secondary text-center">{artist}</p>
           )}
           {isLive && (
-            <span className="flex items-center gap-1.5 bg-red-600/20 text-red-400 text-sm font-semibold px-3 py-1 rounded-full">
-              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+            <span className="flex items-center gap-1.5 bg-radio-live/20 border border-radio-live/40 text-radio-live text-sm font-semibold px-3 py-1 rounded-full animate-live-glow">
+              <span className="w-2 h-2 bg-radio-live rounded-full animate-pulse" aria-hidden="true" />
               LIVE
             </span>
           )}
@@ -44,12 +44,12 @@ export default function NowPlayingHero({ isLive = false, djName }: NowPlayingHer
     if (isLive) {
       return (
         <div className="flex flex-col items-center gap-3">
-          <span className="flex items-center gap-2 text-red-400 text-2xl font-bold">
-            <span className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+          <span className="flex items-center gap-2 text-radio-live text-2xl font-bold font-display">
+            <span className="w-3 h-3 bg-radio-live rounded-full animate-pulse" aria-hidden="true" />
             LIVE
           </span>
           {djName && (
-            <p className="text-lg text-radio-muted text-center">{djName}</p>
+            <p className="text-lg text-radio-text-secondary text-center">{djName}</p>
           )}
         </div>
       );
@@ -58,8 +58,8 @@ export default function NowPlayingHero({ isLive = false, djName }: NowPlayingHer
     // Tier 3: No title and not live
     return (
       <div className="flex flex-col items-center gap-2">
-        <h1 className="text-2xl font-bold text-radio-text">EPIRBE Radio</h1>
-        <p className="text-sm text-radio-muted">Waiting for stream...</p>
+        <h2 className="font-display text-2xl font-bold text-radio-text-primary">EPIRBE Radio</h2>
+        <p className="text-sm text-radio-text-secondary">Waiting for stream...</p>
       </div>
     );
   };
@@ -67,11 +67,11 @@ export default function NowPlayingHero({ isLive = false, djName }: NowPlayingHer
   return (
     <div
       aria-live="polite"
-      className="relative bg-gradient-to-b from-radio-surface to-transparent border border-radio-border rounded-xl min-h-[200px] flex flex-col items-center justify-center p-8"
+      className="relative bg-gradient-to-b from-radio-surface-1 to-transparent border border-radio-border-subtle rounded-xl min-h-[200px] md:min-h-[240px] flex flex-col items-center justify-center p-6 md:p-8"
     >
       {/* Subtle animated gradient overlay for idle state */}
       {!title && !isLive && (
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-radio-accent/5 via-transparent to-radio-accent/5 animate-pulse pointer-events-none" />
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-radio-primary/5 via-transparent to-radio-primary/5 animate-pulse pointer-events-none" aria-hidden="true" />
       )}
 
       <div className="relative z-10">
@@ -79,7 +79,7 @@ export default function NowPlayingHero({ isLive = false, djName }: NowPlayingHer
       </div>
 
       {/* Listener count */}
-      <div className="relative z-10 flex items-center gap-1.5 mt-6 text-sm text-radio-muted">
+      <div className="relative z-10 flex items-center gap-1.5 mt-6 text-sm text-radio-text-secondary">
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
         </svg>

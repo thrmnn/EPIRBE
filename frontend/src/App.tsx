@@ -14,17 +14,26 @@ export default function App() {
   const [firstVisit, setFirstVisit] = useState(
     () => localStorage.getItem("epirbe_visited") === null
   );
+  const [splashFading, setSplashFading] = useState(false);
   const [showLoginInput, setShowLoginInput] = useState(false);
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
 
-  const { title, artist, listeners } = useNowPlaying();
+  const { title, artist, listeners, connected } = useNowPlaying();
   const { isAdmin, login, logout } = useAuth();
   const loginInputRef = useRef<HTMLInputElement>(null);
 
+  // Derive isLive from stream status — a connected stream with a title
+  // indicates active broadcast; refine when backend exposes explicit live flag
+  const isLive = connected && !!title;
+
   const handleStartListening = useCallback(() => {
-    localStorage.setItem("epirbe_visited", "1");
-    setFirstVisit(false);
+    setSplashFading(true);
+    setTimeout(() => {
+      localStorage.setItem("epirbe_visited", "1");
+      setFirstVisit(false);
+      setSplashFading(false);
+    }, 400);
   }, []);
 
   const handleDjButtonClick = useCallback(() => {
@@ -81,19 +90,20 @@ export default function App() {
             ref={loginInputRef}
             id="dj-password"
             type="password"
+            autoComplete="current-password"
             value={loginPassword}
             onChange={(e) => {
               setLoginPassword(e.target.value);
               setLoginError(false);
             }}
             placeholder="Password"
-            className={`w-32 px-2 py-1 text-sm bg-radio-bg border rounded-lg outline-none focus:border-radio-accent ${
-              loginError ? "border-red-500" : "border-radio-border"
+            className={`w-32 px-2 py-1 text-sm bg-radio-surface-base border rounded-lg outline-none focus:border-radio-primary ${
+              loginError ? "border-red-500 animate-shake" : "border-radio-border-subtle"
             }`}
           />
           <button
             type="submit"
-            className="px-3 py-1 text-sm font-semibold bg-radio-accent text-white rounded-lg hover:brightness-110 transition-all"
+            className="min-h-[44px] px-3 py-1 text-sm font-semibold bg-radio-primary text-radio-surface-1 rounded-lg hover:bg-radio-primary-hover transition-all"
           >
             Login
           </button>
@@ -108,12 +118,12 @@ export default function App() {
               : "Open DJ dashboard"
             : "DJ login"
         }
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all ${
+        className={`min-h-[44px] flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold rounded-lg transition-all ${
           isAdmin
             ? showAdmin
-              ? "bg-radio-accent/20 text-radio-accent hover:bg-radio-accent/30"
-              : "bg-radio-border text-radio-text hover:bg-radio-muted/30"
-            : "bg-radio-border text-radio-muted hover:bg-radio-muted/30"
+              ? "bg-radio-primary/20 text-radio-primary hover:bg-radio-primary/30"
+              : "bg-radio-border-subtle text-radio-text-primary hover:bg-radio-text-secondary/30"
+            : "bg-radio-border-subtle text-radio-text-secondary hover:bg-radio-text-secondary/30"
         }`}
       >
         <svg
@@ -132,14 +142,20 @@ export default function App() {
   return (
     <>
       {firstVisit && (
-        <FirstVisitSplash
-          onStart={handleStartListening}
-          listenerCount={listeners}
-          currentTrack={currentTrack}
-        />
+        <div
+          className={`transition-opacity duration-[400ms] ease-out ${
+            splashFading ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <FirstVisitSplash
+            onStart={handleStartListening}
+            listenerCount={listeners}
+            currentTrack={currentTrack}
+          />
+        </div>
       )}
 
-      <Layout isLive={false} headerExtra={headerExtra}>
+      <Layout isLive={isLive} headerExtra={headerExtra}>
         {showAdmin && isAdmin ? (
           <AdminDashboard onLogout={handleLogout} />
         ) : (
@@ -150,7 +166,7 @@ export default function App() {
         )}
       </Layout>
 
-      <PlayerBar />
+      <PlayerBar isLive={isLive} />
     </>
   );
 }

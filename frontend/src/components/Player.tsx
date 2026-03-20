@@ -41,21 +41,21 @@ export default function Player() {
   };
 
   return (
-    <div role="region" aria-label="Audio player" className="flex items-center gap-4 bg-radio-surface border border-radio-border rounded-xl p-4">
+    <div role="region" aria-label="Audio player" className="flex items-center gap-4 bg-radio-surface-1 border border-radio-border-subtle rounded-xl p-4">
       <audio ref={audioRef} />
 
       <button
         onClick={togglePlay}
         aria-label={playing ? "Pause" : "Play"}
-        className="w-12 h-12 rounded-full bg-radio-accent flex items-center justify-center hover:brightness-110 transition-all"
+        className="w-12 h-12 rounded-full bg-radio-primary flex items-center justify-center hover:bg-radio-primary-hover transition-all"
       >
         {playing ? (
-          <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-radio-surface-1" fill="currentColor" viewBox="0 0 24 24">
             <rect x="6" y="4" width="4" height="16" />
             <rect x="14" y="4" width="4" height="16" />
           </svg>
         ) : (
-          <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-radio-surface-1 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
             <polygon points="5,3 19,12 5,21" />
           </svg>
         )}
@@ -64,17 +64,17 @@ export default function Player() {
       <button
         onClick={handleSkip}
         aria-label="Skip to next track"
-        className="w-9 h-9 rounded-lg bg-radio-border flex items-center justify-center hover:bg-radio-muted/30 transition-all"
+        className="w-9 h-9 rounded-lg bg-radio-border-subtle flex items-center justify-center hover:bg-radio-text-secondary/30 transition-all"
         title="Skip track"
       >
-        <svg className="w-4 h-4 text-radio-text" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-radio-text-primary" fill="currentColor" viewBox="0 0 24 24">
           <polygon points="5,3 15,12 5,21" />
           <rect x="16" y="3" width="3" height="18" />
         </svg>
       </button>
 
       <div className="flex items-center gap-2 ml-auto">
-        <svg className="w-4 h-4 text-radio-muted" fill="currentColor" viewBox="0 0 24 24">
+        <svg className="w-4 h-4 text-radio-text-secondary" fill="currentColor" viewBox="0 0 24 24">
           <polygon points="11,5 6,9 2,9 2,15 6,15 11,19" />
           <path d="M14,8.5 C15.3,9.8 16,11.3 16,12 C16,12.7 15.3,14.2 14,15.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
         </svg>
@@ -87,7 +87,7 @@ export default function Player() {
           step="0.01"
           value={volume}
           onChange={handleVolume}
-          className="w-24 accent-radio-accent"
+          className="w-24 accent-radio-primary"
         />
       </div>
     </div>
